@@ -21,12 +21,13 @@ This project allows us to solve a real-world challenge while strengthening our b
 ---
 
 ## Architectural Diagrams
+![Architecture Diagram](pictures/architecture_diagram.png)
 
 ---
 
 ## Data Flow
 
-*(Insert architectural diagram image here if desired)*
+![Data Flow](pictures/data_flow.png)
 
 ---
 
