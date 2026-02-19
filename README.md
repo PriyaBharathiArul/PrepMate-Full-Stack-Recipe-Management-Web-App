@@ -101,15 +101,10 @@ GET /users/me/recipes
 
 ```
 _id (ObjectId)
-title (string)
-description (string)
-category (string)
-ingredients (JSON)
-instructions (list of strings)
-imageUrl (string)
-createdBy (ObjectId)
-favoritesCount (number)
-createdAt (date)
+username
+email
+password
+createdAt
 ```
 
 ### Recipes
