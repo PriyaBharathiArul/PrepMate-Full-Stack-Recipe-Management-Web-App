@@ -1,13 +1,64 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <title>Express</title>
-  <link rel="stylesheet" href="/stylesheets/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Saveur — Recipes Worth Making</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="stylesheets/main.css"/>
 </head>
-
 <body>
-  <h1>Express</h1>
-  <p>Welcome to Express</p>
-</body>
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-left">
+        <a href="index.html" class="logo">Saveur</a>
+      </div>
+      <div class="header-center">
+        <nav class="main-nav">
+          <a href="index.html" class="nav-link active">Home</a>
+        </nav>
+      </div>
+      <div class="header-right" id="headerRight">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </header>
 
+  <!-- HERO / FILTER BAR -->
+  <section class="hero-strip">
+    <div class="hero-strip-inner">
+      <div class="filter-label">Filter by</div>
+      <div class="filters" id="filterBar">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="soup">Soup</button>
+        <button class="filter-btn" data-filter="meat">Meat</button>
+        <button class="filter-btn" data-filter="vegetarian">Vegetarian</button>
+        <button class="filter-btn" data-filter="dessert">Dessert</button>
+        <button class="filter-btn" data-filter="pasta">Pasta</button>
+        <button class="filter-btn" data-filter="seafood">Seafood</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- RECIPE GRID -->
+  <main class="main-content">
+    <div class="recipes-grid" id="recipesGrid">
+      <!-- Populated by JS -->
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span class="logo">Saveur</span>
+      <p>Recipes worth making, every single day.</p>
+    </div>
+  </footer>
+
+  <script src="javascripts/utils.js"></script>
+  <script src="javascripts/index.js"></script>
+</body>
 </html>
