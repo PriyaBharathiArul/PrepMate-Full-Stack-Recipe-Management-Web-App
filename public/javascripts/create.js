@@ -1,6 +1,7 @@
 // create.js — Create recipe page
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded',async () => {
+  await initAuth();
   renderHeader();
 
   const user = getUser();

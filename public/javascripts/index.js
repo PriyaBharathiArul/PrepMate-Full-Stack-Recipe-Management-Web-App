@@ -1,8 +1,8 @@
 // index.js — Homepage logic
 
 document.addEventListener('DOMContentLoaded', async () => {
+  await initAuth();
   renderHeader();
-  initLoginModal();
   setupFilters();
   await loadRecipes('all');
 });
@@ -62,6 +62,7 @@ function setupFilters() {
   const btns = document.querySelectorAll('.filter-btn');
   btns.forEach(btn => {
     btn.addEventListener('click', async () => {
+
       btns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       activeFilter = btn.dataset.filter;

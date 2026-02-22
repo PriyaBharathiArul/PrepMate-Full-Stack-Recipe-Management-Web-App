@@ -4,6 +4,7 @@ let recipeId = null;
 let currentRating = 0;
 
 document.addEventListener('DOMContentLoaded', async () => {
+  await initAuth();
   renderHeader();
   initLoginModal();
 

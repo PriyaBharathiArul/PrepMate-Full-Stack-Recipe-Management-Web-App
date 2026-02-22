@@ -3,40 +3,32 @@
 const API_BASE = '/api';
 
 // ---- Auth helpers ----
+let _currentUser = null;
+
+async function initAuth() {
+  try {
+    const res = await fetch('/auth/me');
+    if (res.ok) {
+      const data = await res.json();
+      _currentUser = data.user;
+    } else {
+      _currentUser = null;
+    }
+  } catch {
+    _currentUser = null;
+  }
+}
 function getUser() {
-  const raw = localStorage.getItem('saveur_user');
-  if (!raw) return null;
-  try { return JSON.parse(raw); } catch { return null; }
-}
-
-function setUser(user) {
-  localStorage.setItem('saveur_user', JSON.stringify(user));
-}
-
-function clearUser() {
-  localStorage.removeItem('saveur_user');
-}
-
-function getToken() {
-  return localStorage.getItem('saveur_token') || null;
-}
-
-function setToken(token) {
-  localStorage.setItem('saveur_token', token);
-}
-
-function clearToken() {
-  localStorage.removeItem('saveur_token');
+  return _currentUser;
 }
 
 // ---- API fetch wrapper ----
 async function apiRequest(method, path, body = null) {
-  const token = getToken();
   const opts = {
     method,
     headers: { 'Content-Type': 'application/json' },
+    credentials: 'same-origin', // 带上 session cookie
   };
-  if (token) opts.headers['Authorization'] = `Bearer ${token}`;
   if (body) opts.body = JSON.stringify(body);
   const res = await fetch(API_BASE + path, opts);
   const data = await res.json();
@@ -63,18 +55,15 @@ function renderHeader() {
   } else {
     el.innerHTML = `<button class="btn-login" id="openLoginBtn">Log In</button>`;
     document.getElementById('openLoginBtn').addEventListener('click', () => {
-      const modal = document.getElementById('loginModal');
-      if (modal) modal.style.display = 'flex';
+      window.location.href = '/auth/signin'; // 跳转 Azure
     });
   }
 }
 
 function logout() {
-  clearUser();
-  clearToken();
-  window.location.href = 'index.html';
+  _currentUser = null;
+  window.location.href = '/auth/signout';
 }
-
 // ---- Toast ----
 function showToast(msg) {
   const existing = document.querySelector('.toast');
@@ -138,53 +127,3 @@ function buildRecipeCard(recipe, extraActions = '') {
   `;
 }
 
-// ---- Init login modal logic (used on pages that include modal) ----
-function initLoginModal() {
-  const modal = document.getElementById('loginModal');
-  const closeBtn = document.getElementById('closeModal');
-  if (!modal) return;
-
-  closeBtn && closeBtn.addEventListener('click', () => modal.style.display = 'none');
-  modal.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
-
-  const loginForm = document.getElementById('loginForm');
-  if (loginForm) {
-    loginForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const username = document.getElementById('loginUsername').value.trim();
-      const password = document.getElementById('loginPassword').value;
-      try {
-        const data = await apiRequest('POST', '/auth/login', { username, password });
-        setUser(data.user);
-        setToken(data.token);
-        modal.style.display = 'none';
-        showToast(`Welcome back, ${data.user.username}! 👋`);
-        renderHeader();
-        setTimeout(() => window.location.reload(), 800);
-      } catch (err) {
-        showToast('Login failed: ' + err.message);
-      }
-    });
-  }
-
-  const switchReg = document.getElementById('switchToRegister');
-  if (switchReg) {
-    switchReg.addEventListener('click', async (e) => {
-      e.preventDefault();
-      const username = document.getElementById('loginUsername').value.trim();
-      const password = document.getElementById('loginPassword').value;
-      if (!username || !password) { showToast('Enter username and password to register.'); return; }
-      try {
-        const data = await apiRequest('POST', '/auth/register', { username, password });
-        setUser(data.user);
-        setToken(data.token);
-        modal.style.display = 'none';
-        showToast(`Account created! Welcome, ${data.user.username}! 🎉`);
-        renderHeader();
-        setTimeout(() => window.location.reload(), 800);
-      } catch (err) {
-        showToast('Registration failed: ' + err.message);
-      }
-    });
-  }
-}

@@ -1,6 +1,7 @@
 // userInfo.js — Profile page
 
 document.addEventListener('DOMContentLoaded', async () => {
+  await initAuth();
   renderHeader();
 
   const user = getUser();
