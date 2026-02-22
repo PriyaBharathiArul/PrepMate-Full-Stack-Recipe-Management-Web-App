@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profile — Saveur</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="stylesheets/main.css"/>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-left">
+        <a href="index.html" class="logo">Saveur</a>
+      </div>
+      <div class="header-center">
+        <nav class="main-nav">
+          <a href="index.html" class="nav-link">Home</a>
+        </nav>
+      </div>
+      <div class="header-right" id="headerRight"></div>
+    </div>
+  </header>
+
+  <main class="profile-page">
+    <div class="profile-header-section">
+      <div class="avatar-circle" id="avatarCircle"></div>
+      <div class="profile-meta">
+        <h1 id="profileUsername">Chef Anonymous</h1>
+        <p id="profileJoined" class="profile-joined"></p>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="profile-tabs">
+      <button class="tab-btn active" data-tab="myRecipes">My Recipes</button>
+      <button class="tab-btn" data-tab="liked">Liked Recipes</button>
+      <button class="tab-btn" data-tab="reviews">My Reviews</button>
+    </div>
+
+    <!-- MY RECIPES -->
+    <section class="tab-panel active" id="tab-myRecipes">
+      <div class="recipes-grid" id="myRecipesGrid"></div>
+      <p class="empty-state" id="myRecipesEmpty" style="display:none">You haven't created any recipes yet.</p>
+    </section>
+
+    <!-- LIKED -->
+    <section class="tab-panel" id="tab-liked">
+      <div class="recipes-grid" id="likedGrid"></div>
+      <p class="empty-state" id="likedEmpty" style="display:none">No liked recipes yet.</p>
+    </section>
+
+    <!-- REVIEWS -->
+    <section class="tab-panel" id="tab-reviews">
+      <div class="reviews-list" id="myReviewsList"></div>
+      <p class="empty-state" id="reviewsEmpty" style="display:none">You haven't reviewed any recipes yet.</p>
+    </section>
+  </main>
+
+  <script src="javascripts/utils.js"></script>
+  <script src="javascripts/userInfo.js"></script>
+</body>
+</html>

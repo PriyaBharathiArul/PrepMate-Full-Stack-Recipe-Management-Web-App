@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Create Recipe — Saveur</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="stylesheets/main.css"/>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-left">
+        <a href="index.html" class="logo">Saveur</a>
+      </div>
+      <div class="header-center">
+        <nav class="main-nav">
+          <a href="index.html" class="nav-link">Home</a>
+        </nav>
+      </div>
+      <div class="header-right" id="headerRight"></div>
+    </div>
+  </header>
+
+  <main class="create-page">
+    <div class="create-container">
+      <h1 class="create-title">Share a Recipe</h1>
+      <p class="create-sub">Every great dish starts with someone willing to share it.</p>
+
+      <form id="createRecipeForm" class="create-form">
+        <!-- COVER IMAGE -->
+        <div class="form-group">
+          <label>Cover Photo</label>
+          <div class="image-drop-zone" id="imageDropZone">
+            <div class="drop-content" id="dropContent">
+              <div class="drop-icon">📷</div>
+              <p>Click or drag an image here</p>
+            </div>
+            <img id="imagePreview" class="image-preview" style="display:none"/>
+            <input type="file" id="imageInput" accept="image/*" style="display:none"/>
+          </div>
+          <input type="text" id="imageUrl" placeholder="Or paste an image URL…" class="url-input"/>
+        </div>
+
+        <!-- TITLE -->
+        <div class="form-group">
+          <label for="recipeTitle">Recipe Name <span class="required">*</span></label>
+          <input type="text" id="recipeTitle" placeholder="e.g. Rustic Tomato Bisque" required/>
+        </div>
+
+        <!-- CATEGORY -->
+        <div class="form-group">
+          <label for="recipeCategory">Category <span class="required">*</span></label>
+          <select id="recipeCategory" required>
+            <option value="">Select a category…</option>
+            <option value="soup">Soup</option>
+            <option value="meat">Meat</option>
+            <option value="vegetarian">Vegetarian</option>
+            <option value="dessert">Dessert</option>
+            <option value="pasta">Pasta</option>
+            <option value="seafood">Seafood</option>
+          </select>
+        </div>
+
+        <!-- META ROW -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="prepTime">Prep Time (min)</label>
+            <input type="number" id="prepTime" placeholder="15" min="0"/>
+          </div>
+          <div class="form-group">
+            <label for="cookTime">Cook Time (min)</label>
+            <input type="number" id="cookTime" placeholder="30" min="0"/>
+          </div>
+          <div class="form-group">
+            <label for="servings">Servings</label>
+            <input type="number" id="servings" placeholder="4" min="1"/>
+          </div>
+        </div>
+
+        <!-- DESCRIPTION -->
+        <div class="form-group">
+          <label for="recipeDescription">Description</label>
+          <textarea id="recipeDescription" rows="3" placeholder="A few words about this recipe…"></textarea>
+        </div>
+
+        <!-- INGREDIENTS -->
+        <div class="form-group">
+          <label>Ingredients <span class="required">*</span></label>
+          <div id="ingredientsList">
+            <div class="ingredient-row">
+              <input type="text" placeholder="e.g. 2 cups of flour" class="ingredient-input"/>
+              <button type="button" class="remove-btn" onclick="removeIngredient(this)">✕</button>
+            </div>
+          </div>
+          <button type="button" class="add-btn" id="addIngredient">+ Add Ingredient</button>
+        </div>
+
+        <!-- STEPS -->
+        <div class="form-group">
+          <label>Instructions <span class="required">*</span></label>
+          <div id="stepsList">
+            <div class="step-row">
+              <div class="step-number">1</div>
+              <textarea placeholder="Describe this step…" class="step-input" rows="2"></textarea>
+              <button type="button" class="remove-btn" onclick="removeStep(this)">✕</button>
+            </div>
+          </div>
+          <button type="button" class="add-btn" id="addStep">+ Add Step</button>
+        </div>
+
+        <!-- SUBMIT -->
+        <div class="form-actions">
+          <a href="index.html" class="btn-ghost">Cancel</a>
+          <button type="submit" class="btn-primary">Publish Recipe</button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <script src="javascripts/utils.js"></script>
+  <script src="javascripts/create.js"></script>
+</body>
+</html>
