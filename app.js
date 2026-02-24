@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 
 import usersRouter from './routes/users.js';
+import recipesRouter from './routes/recipes.js';
 
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -38,10 +39,10 @@ app.use(sessions({
 
 const authProvider = await WebAppAuthProvider.initialize({
   auth: {
-    authority: "https://login.microsoftonline.com/" + azure_authority_id,
+    authority: 'https://login.microsoftonline.com/' + azure_authority_id,
     clientId: azure_client_id,
     clientSecret: azure_secret,
-    redirectUri: "/auth/redirect", 
+    redirectUri: '/auth/redirect',
   }
 });
 app.use(authProvider.authenticate({ protectAllRoutes: false }));
@@ -63,7 +64,6 @@ app.use(async (req, res, next) => {
         email: user.email,
         createdAt: user.createdAt,
       };
-    //   console.log('session.user set:', req.session.user);
     } catch (err) {
       console.error('Error saving user to session:', err);
     }
@@ -77,6 +77,9 @@ app.use((req, res, next) => {
   next();
 });
 app.use('/users', usersRouter);
+app.use('/api/users', usersRouter);
 app.use('/auth', authRouter);
+app.use('/api/recipes', recipesRouter);
+app.use('/recipes', recipesRouter);
 app.use(authProvider.interactionErrorHandler());
 export default app;

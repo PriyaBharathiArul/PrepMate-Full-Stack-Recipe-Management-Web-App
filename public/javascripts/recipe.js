@@ -6,7 +6,9 @@ let currentRating = 0;
 document.addEventListener('DOMContentLoaded', async () => {
   await initAuth();
   renderHeader();
-  initLoginModal();
+  if (typeof initLoginModal === 'function') {
+    initLoginModal();
+  }
 
   const params = new URLSearchParams(window.location.search);
   recipeId = params.get('id');

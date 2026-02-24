@@ -49,11 +49,7 @@ async function loadMyRecipes() {
     const recipes = data.recipes || data;
     renderMyRecipes(recipes, grid, empty);
   } catch {
-    // Demo
-    renderMyRecipes([
-      { _id: 'r1', title: 'Roasted Garlic Hummus', category: 'vegetarian', prepTime: 10, servings: 6 },
-      { _id: 'r2', title: 'Lamb Tagine', category: 'meat', prepTime: 25, cookTime: 120, servings: 4, avgRating: 4.7 },
-    ], grid, empty);
+    renderMyRecipes([], grid, empty);
   }
 }
 
@@ -64,6 +60,8 @@ function renderMyRecipes(recipes, grid, empty) {
     return;
   }
 
+  grid.style.display = 'grid';
+  empty.style.display = 'none';
   grid.innerHTML = recipes.map(r => buildRecipeCard(r,
     `<button class="card-action-btn" onclick="deleteMyRecipe('${r._id}', event)">Delete</button>`
   )).join('');
@@ -91,10 +89,7 @@ async function loadLikedRecipes() {
     const recipes = data.recipes || data;
     renderLikedRecipes(recipes, grid, empty);
   } catch {
-    renderLikedRecipes([
-      { _id: 'r3', title: 'Crème Brûlée', category: 'dessert', prepTime: 20, cookTime: 45, servings: 6, avgRating: 5.0 },
-      { _id: 'r4', title: 'Cacio e Pepe', category: 'pasta', prepTime: 10, cookTime: 15, servings: 2, avgRating: 4.7 },
-    ], grid, empty);
+    renderLikedRecipes([], grid, empty);
   }
 }
 
@@ -105,6 +100,8 @@ function renderLikedRecipes(recipes, grid, empty) {
     return;
   }
 
+  grid.style.display = 'grid';
+  empty.style.display = 'none';
   grid.innerHTML = recipes.map(r => buildRecipeCard(r,
     `<button class="card-action-btn" onclick="unlikeRecipe('${r._id}', event)">Unlike</button>`
   )).join('');
@@ -131,10 +128,7 @@ async function loadMyReviews() {
     const reviews = data.reviews || data;
     renderMyReviews(reviews, list, empty);
   } catch {
-    renderMyReviews([
-      { _id: 'v1', recipe: { _id: 'r1', title: 'French Onion Soup' }, rating: 5, comment: 'Absolutely incredible. Made it twice already.', createdAt: '2026-01-14' },
-      { _id: 'v2', recipe: { _id: 'r2', title: 'Braised Short Ribs' }, rating: 5, comment: 'Best short ribs I\'ve ever had at home.', createdAt: '2025-12-20' },
-    ], list, empty);
+    renderMyReviews([], list, empty);
   }
 }
 
@@ -145,6 +139,8 @@ function renderMyReviews(reviews, list, empty) {
     return;
   }
 
+  list.style.display = 'grid';
+  empty.style.display = 'none';
   list.innerHTML = reviews.map(r => `
     <div class="profile-review-card">
       ${r.recipe ? `<a href="recipe.html?id=${r.recipe._id}" class="profile-review-recipe">${r.recipe.title}</a>` : ''}
