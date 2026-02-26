@@ -17,6 +17,8 @@
   --charcoal: #2C2218;
   --mid-gray: #8C7B6E;
   --light-gray: #D8CFC4;
+  --danger: #A85C58;
+  --danger-hover: #8B4A46;
   --card-shadow: 0 4px 24px rgba(44, 34, 24, 0.10);
   --card-shadow-hover: 0 8px 40px rgba(44, 34, 24, 0.18);
   --font-display: 'Playfair Display', Georgia, serif;
@@ -130,6 +132,25 @@ body {
 }
 
 .btn-ghost:hover { border-color: var(--clay); color: var(--clay); }
+
+/* Delete button with the same style as btn-ghost, only different color for dangerous operations */
+.btn-danger {
+  background: transparent;
+  color: var(--danger);
+  border: 1.5px solid var(--danger);
+  border-radius: 24px;
+  padding: 10px 24px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-danger:hover { border-color: var(--danger-hover); color: var(--danger-hover); background: rgba(168, 92, 88, 0.06); }
 
 .btn-create {
   background: var(--clay);

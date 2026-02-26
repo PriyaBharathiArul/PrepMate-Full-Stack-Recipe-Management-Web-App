@@ -153,6 +153,25 @@ function renderRecipeDetail(recipe) {
       }
     });
   }
+
+  // Check if the user is the author, show Edit and Delete buttons
+  const ownerActions = document.getElementById('ownerActions');
+  if (user && recipe.author && user._id.toString() === recipe.author._id.toString()) {
+    ownerActions.style.display = 'flex';
+
+    document.getElementById('editBtn').href = `edit.html?id=${recipe._id}`;
+
+    document.getElementById('deleteBtn').addEventListener('click', async () => {
+      if (!confirm('Delete this recipe? This cannot be undone.')) return;
+      try {
+        await apiRequest('DELETE', `/recipes/${recipe._id}`);
+        showToast('Recipe deleted.');
+        setTimeout(() => window.location.href = 'index.html', 1000);
+      } catch (err) {
+        showToast('Could not delete: ' + err.message);
+      }
+    });
+  }
 }
 
 async function checkLiked(recipeId) {
