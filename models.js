@@ -54,10 +54,6 @@ const recipeSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
-  favoritesCount: {
-    type: Number,
-    default: 0
-  },
   prepTime: {
     type: Number,
     default: 0
@@ -95,8 +91,31 @@ const commentSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
-  text: {
+  rating: {
+    type: Number,
+    required: true,
+    min: 1,
+    max: 5
+  },
+  comment: {
     type: String,
+    default: ''
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
+});
+
+const favoriteSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  recipeId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Recipe',
     required: true
   },
   createdAt: {
@@ -105,8 +124,12 @@ const commentSchema = new mongoose.Schema({
   }
 });
 
+// Create a compound index to ensure a user can only favorite a recipe once
+favoriteSchema.index({ userId: 1, recipeId: 1 }, { unique: true });
+
 const User = mongoose.models.User || mongoose.model('User', userSchema);
 const Recipe = mongoose.models.Recipe || mongoose.model('Recipe', recipeSchema);
 const Comment = mongoose.models.Comment || mongoose.model('Comment', commentSchema);
+const Favorite = mongoose.models.Favorite || mongoose.model('Favorite', favoriteSchema);
 
-export default { User, Recipe, Comment };
+export default { User, Recipe, Comment, Favorite };

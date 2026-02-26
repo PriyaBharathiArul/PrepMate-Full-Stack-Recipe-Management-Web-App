@@ -23,8 +23,26 @@ router.get('/me/recipes', requireLogin, async (req, res) => {
   }
 });
 
-router.get('/me/liked', requireLogin, async (_req, res) => {
-  return res.json({ recipes: [] });
+router.get('/me/liked', requireLogin, async (req, res) => {
+  try {
+    const favorites = await models.Favorite.find({ userId: req.session.user._id })
+      .sort({ createdAt: -1 })
+      .populate({
+        path: 'recipeId',
+        populate: {
+          path: 'createdBy',
+          select: 'username'
+        }
+      });
+
+    const recipes = favorites
+      .filter(fav => fav.recipeId) // Filter out any deleted recipes
+      .map(fav => fav.recipeId);
+
+    return res.json({ recipes });
+  } catch (err) {
+    return res.status(500).json({ message: 'Failed to load liked recipes.', error: err.message });
+  }
 });
 
 router.get('/me/reviews', requireLogin, async (_req, res) => {
