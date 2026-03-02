@@ -162,7 +162,7 @@ function renderRecipeDetail(recipe) {
     document.getElementById('editBtn').href = `edit.html?id=${recipe._id}`;
 
     document.getElementById('deleteBtn').addEventListener('click', async () => {
-      if (!confirm('Delete this recipe? This cannot be undone.')) return;
+      if (!confirm('Delete this recipe? Are you sure?')) return;
       try {
         await apiRequest('DELETE', `/recipes/${recipe._id}`);
         showToast('Recipe deleted.');

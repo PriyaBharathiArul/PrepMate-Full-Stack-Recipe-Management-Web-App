@@ -31,8 +31,11 @@ async function apiRequest(method, path, body = null) {
   };
   if (body) opts.body = JSON.stringify(body);
   const res = await fetch(API_BASE + path, opts);
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.message || 'Request failed');
+  const contentType = res.headers.get('content-type') || '';
+  const data = contentType.includes('application/json')
+    ? await res.json()
+    : null;
+  if (!res.ok) throw new Error(data?.message || 'Request failed');
   return data;
 }
 
@@ -126,4 +129,3 @@ function buildRecipeCard(recipe, extraActions = '') {
     </div>
   `;
 }
-

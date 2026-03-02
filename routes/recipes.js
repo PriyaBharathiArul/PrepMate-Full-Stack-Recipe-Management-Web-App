@@ -36,6 +36,18 @@ function isValidObjectId(id) {
   return mongoose.Types.ObjectId.isValid(id);
 }
 
+function normalizeStringArray(value) {
+  if (!Array.isArray(value)) return [];
+  return value
+    .map(item => typeof item === 'string' ? item.trim() : '')
+    .filter(Boolean);
+}
+
+function normalizeNumber(value) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed >= 0 ? parsed : 0;
+}
+
 router.get('/', async (req, res) => {
   try {
     const filter = {};
@@ -271,31 +283,41 @@ router.put('/:id', requireLogin, async (req, res) => {
       return res.status(403).json({ message: 'You can only edit your own recipe.' });
     }
 
-    const allowed = [
-      'title',
-      'description',
-      'category',
-      'ingredients',
-      'steps',
-      'instructions',
-      'imageUrl',
-      'prepTime',
-      'cookTime',
-      'servings'
-    ];
+    const title = typeof req.body.title === 'string' ? req.body.title.trim() : '';
+    const category = typeof req.body.category === 'string' ? req.body.category.trim() : '';
+    const description = typeof req.body.description === 'string' ? req.body.description.trim() : '';
+    const imageUrl = typeof req.body.imageUrl === 'string' && req.body.imageUrl.trim()
+      ? req.body.imageUrl.trim()
+      : null;
 
-    for (const key of allowed) {
-      if (key in req.body) {
-        recipe[key] = req.body[key];
-      }
+    const steps = 'steps' in req.body
+      ? normalizeStringArray(req.body.steps)
+      : normalizeStringArray(req.body.instructions);
+
+    const ingredients = normalizeStringArray(req.body.ingredients);
+
+    if (!title || !category) {
+      return res.status(400).json({ message: 'title and category are required.' });
     }
 
-    if ('steps' in req.body && !('instructions' in req.body)) {
-      recipe.instructions = req.body.steps;
+    if (!ingredients.length) {
+      return res.status(400).json({ message: 'At least one ingredient is required.' });
     }
-    if ('instructions' in req.body && !('steps' in req.body)) {
-      recipe.steps = req.body.instructions;
+
+    if (!steps.length) {
+      return res.status(400).json({ message: 'At least one step is required.' });
     }
+
+    recipe.title = title;
+    recipe.category = category;
+    recipe.description = description;
+    recipe.imageUrl = imageUrl;
+    recipe.ingredients = ingredients;
+    recipe.steps = steps;
+    recipe.instructions = steps;
+    recipe.prepTime = normalizeNumber(req.body.prepTime);
+    recipe.cookTime = normalizeNumber(req.body.cookTime);
+    recipe.servings = normalizeNumber(req.body.servings);
 
     await recipe.save();
     const populated = await models.Recipe.findById(recipe._id).populate('createdBy', 'username');
@@ -321,7 +343,12 @@ router.delete('/:id', requireLogin, async (req, res) => {
       return res.status(403).json({ message: 'You can only delete your own recipe.' });
     }
 
-    await models.Recipe.findByIdAndDelete(req.params.id);
+    await Promise.all([
+      models.Comment.deleteMany({ recipeId: req.params.id }),
+      models.Favorite.deleteMany({ recipeId: req.params.id }),
+      models.Recipe.findByIdAndDelete(req.params.id)
+    ]);
+
     return res.status(204).send();
   } catch (err) {
     return res.status(500).json({ message: 'Failed to delete recipe.', error: err.message });
