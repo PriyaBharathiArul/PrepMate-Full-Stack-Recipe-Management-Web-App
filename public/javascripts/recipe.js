@@ -85,7 +85,7 @@ function renderRecipeDetail(recipe) {
 
   const likeBtn = user
     ? `<button class="like-btn" id="likeBtn"><span class="heart">♥</span> <span id="likeCount">${recipe.likeCount || 0}</span></button>`
-    : `<button class="like-btn" id="likeBtn" onclick="document.getElementById('loginModal').style.display='flex'"><span class="heart">♥</span> <span id="likeCount">${recipe.likeCount || 0}</span></button>`;
+    : `<button class="like-btn" id="likeBtn" onclick="window.location.href='/auth/signin'"><span class="heart">♥</span> <span id="likeCount">${recipe.likeCount || 0}</span></button>`;
 
   container.innerHTML = `
     ${img}
@@ -235,7 +235,7 @@ function setupReviewUI() {
     const link = document.getElementById('loginToReviewLink');
     if (link) link.addEventListener('click', (e) => {
       e.preventDefault();
-      document.getElementById('loginModal').style.display = 'flex';
+      window.location.href = '/auth/signin';
     });
   }
 
