@@ -45,8 +45,29 @@ router.get('/me/liked', requireLogin, async (req, res) => {
   }
 });
 
-router.get('/me/reviews', requireLogin, async (_req, res) => {
-  return res.json({ reviews: [] });
+router.get('/me/reviews', requireLogin, async (req, res) => {
+  try {
+    const comments = await models.Comment.find({ userId: req.session.user._id })
+      .sort({ createdAt: -1 })
+      .populate('recipeId', 'title');
+
+    const reviews = comments.map((c) => ({
+      _id: c._id,
+      rating: c.rating,
+      comment: c.comment,
+      createdAt: c.createdAt,
+      recipe: c.recipeId
+        ? {
+            _id: c.recipeId._id,
+            title: c.recipeId.title
+          }
+        : null
+    }));
+
+    return res.json({ reviews });
+  } catch (err) {
+    return res.status(500).json({ message: 'Failed to load your reviews.', error: err.message });
+  }
 });
 
 export default router;
