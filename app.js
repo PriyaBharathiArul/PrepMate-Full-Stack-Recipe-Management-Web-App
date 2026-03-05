@@ -12,6 +12,7 @@ import sessions from 'express-session';
 import { WebAppAuthProvider } from 'msal-node-wrapper';
 import models from './models.js';
 import authRouter from './routes/auth.js';
+import uploadRouter from './routes/upload.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -81,5 +82,6 @@ app.use('/api/users', usersRouter);
 app.use('/auth', authRouter);
 app.use('/api/recipes', recipesRouter);
 app.use('/recipes', recipesRouter);
+app.use('/api/upload', uploadRouter);
 app.use(authProvider.interactionErrorHandler());
 export default app;

@@ -27,7 +27,7 @@ async function apiRequest(method, path, body = null) {
   const opts = {
     method,
     headers: { 'Content-Type': 'application/json' },
-    credentials: 'same-origin', // 带上 session cookie
+    credentials: 'same-origin', 
   };
   if (body) opts.body = JSON.stringify(body);
   const res = await fetch(API_BASE + path, opts);
@@ -58,7 +58,7 @@ function renderHeader() {
   } else {
     el.innerHTML = `<button class="btn-login" id="openLoginBtn">Log In</button>`;
     document.getElementById('openLoginBtn').addEventListener('click', () => {
-      window.location.href = '/auth/signin'; // 跳转 Azure
+      window.location.href = '/auth/signin';
     });
   }
 }

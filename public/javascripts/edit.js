@@ -1,6 +1,7 @@
 // edit.js — Edit recipe page: Fetch the recipe by the id in the URL and populate the form, submit the form by PUT to update the recipe
 
 let recipeId = null;
+let uploadedImageUrl = null; // global variable to store the uploaded image URL
 
 document.addEventListener('DOMContentLoaded', async () => {
   await initAuth();
@@ -53,6 +54,7 @@ function populateForm(recipe) {
   document.getElementById('imageUrl').value = recipe.imageUrl || '';
 
   if (recipe.imageUrl) {
+    uploadedImageUrl = recipe.imageUrl;
     const preview = document.getElementById('imagePreview');
     const dropContent = document.getElementById('dropContent');
     preview.src = recipe.imageUrl;
@@ -151,14 +153,15 @@ function setupImageUpload() {
     dropZone.style.borderColor = '';
     dropZone.style.background = '';
     const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith('image/')) showPreview(file);
+    if (file && file.type.startsWith('image/')) uploadAndPreview(file);
   });
 
   input.addEventListener('change', () => {
-    if (input.files[0]) showPreview(input.files[0]);
+    if (input.files[0]) uploadAndPreview(input.files[0]);
   });
 
-  function showPreview(file) {
+  async function uploadAndPreview(file) {
+    // preview locally
     const reader = new FileReader();
     reader.onload = e => {
       preview.src = e.target.result;
@@ -166,10 +169,31 @@ function setupImageUpload() {
       dropContent.style.display = 'none';
     };
     reader.readAsDataURL(file);
+
+    // upload to server (local /api/upload or can be changed to Azure Blob)
+    showToast('Uploading image…');
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        credentials: 'same-origin',
+        body: formData
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Upload failed');
+      uploadedImageUrl = data.url;
+      urlInput.value = data.url;
+      showToast('Image uploaded! ✅');
+    } catch (err) {
+      showToast('Image upload failed: ' + err.message);
+      uploadedImageUrl = null;
+    }
   }
 
   urlInput.addEventListener('blur', () => {
     if (urlInput.value.trim()) {
+      uploadedImageUrl = urlInput.value.trim();
       preview.src = urlInput.value.trim();
       preview.style.display = 'block';
       dropContent.style.display = 'none';
@@ -228,7 +252,7 @@ function setupForm() {
     const prepTime = parseInt(document.getElementById('prepTime').value) || 0;
     const cookTime = parseInt(document.getElementById('cookTime').value) || 0;
     const servings = parseInt(document.getElementById('servings').value) || 0;
-    const imageUrl = document.getElementById('imageUrl').value.trim() || null;
+    const imageUrl = uploadedImageUrl || document.getElementById('imageUrl').value.trim() || null;
 
     const ingredients = [...document.querySelectorAll('.ingredient-input')]
       .map(el => el.value.trim()).filter(Boolean);
