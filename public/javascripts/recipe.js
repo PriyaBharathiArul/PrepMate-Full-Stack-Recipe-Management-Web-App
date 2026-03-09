@@ -129,7 +129,7 @@ function renderRecipeDetail(recipe) {
   // Like button logic
   const likeButton = document.getElementById('likeBtn');
   if (likeButton && user) {
-    // Check if already liked
+    // Checking if already liked
     checkLiked(recipe._id).then(liked => {
       if (liked) likeButton.classList.add('liked');
     });
@@ -154,7 +154,7 @@ function renderRecipeDetail(recipe) {
     });
   }
 
-  // Check if the user is the author, show Edit and Delete buttons
+  // Checking if the user is the author, showing Edit and Delete buttons
   const ownerActions = document.getElementById('ownerActions');
   if (user && recipe.author && user._id.toString() === recipe.author._id.toString()) {
     ownerActions.style.display = 'flex';
@@ -201,7 +201,7 @@ async function loadReviews() {
       </div>
     `).join('');
   } catch {
-    // Demo reviews
+    //  reviews
     list.innerHTML = `
       <div class="review-card">
         <div class="review-header">

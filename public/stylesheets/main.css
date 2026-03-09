@@ -1,6 +1,6 @@
 /* ============================================
-   SAVEUR — Main Stylesheet
-   Aesthetic: Warm Editorial / Food Magazine
+   PrepMate — Main Stylesheet
+  
    ============================================ */
 
 :root {
@@ -133,7 +133,7 @@ body {
 
 .btn-ghost:hover { border-color: var(--clay); color: var(--clay); }
 
-/* Delete button with the same style as btn-ghost, only different color for dangerous operations */
+
 .btn-danger {
   background: transparent;
   color: var(--danger);

@@ -1,6 +1,7 @@
-// create.js — Create recipe page
 
-let uploadedImageUrl = null; // global variable to store the uploaded image URL
+// Creating recipe page
+// global variable to store the uploaded image URL
+let uploadedImageUrl = null; 
 
 document.addEventListener('DOMContentLoaded', async () => {
   await initAuth();
@@ -102,7 +103,7 @@ function setupDynamicLists() {
     document.getElementById('ingredientsList').appendChild(row);
   });
 
-  // Steps
+
   document.getElementById('addStep').addEventListener('click', () => {
     const list = document.getElementById('stepsList');
     const num = list.querySelectorAll('.step-row').length + 1;
@@ -128,7 +129,7 @@ function removeStep(btn) {
   const list = document.getElementById('stepsList');
   if (list.querySelectorAll('.step-row').length > 1) {
     btn.closest('.step-row').remove();
-    // Renumber steps
+    
     list.querySelectorAll('.step-number').forEach((el, i) => el.textContent = i + 1);
   }
 }

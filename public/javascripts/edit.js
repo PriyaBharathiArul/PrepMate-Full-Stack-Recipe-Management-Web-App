@@ -1,7 +1,7 @@
-// edit.js — Edit recipe page: Fetch the recipe by the id in the URL and populate the form, submit the form by PUT to update the recipe
+// Edit recipe page: Fetch the recipe by the id in the URL and populate the form, submit the form by PUT to update the recipe
 
 let recipeId = null;
-let uploadedImageUrl = null; // global variable to store the uploaded image URL
+let uploadedImageUrl = null;
 
 document.addEventListener('DOMContentLoaded', async () => {
   await initAuth();
@@ -184,7 +184,7 @@ function setupImageUpload() {
       if (!res.ok) throw new Error(data.message || 'Upload failed');
       uploadedImageUrl = data.url;
       urlInput.value = data.url;
-      showToast('Image uploaded! ✅');
+      showToast('Image uploaded!');
     } catch (err) {
       showToast('Image upload failed: ' + err.message);
       uploadedImageUrl = null;

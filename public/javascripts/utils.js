@@ -2,7 +2,7 @@
 
 const API_BASE = '/api';
 
-// ---- Auth helpers ----
+// ---- Auth  ----
 let _currentUser = null;
 
 async function initAuth() {
