@@ -1,26 +1,27 @@
 /* ============================================
-   PrepMate — Main Stylesheet
-  
+   SAVEUR — Main Stylesheet
+   Aesthetic: Light Purple / Lavender Theme
    ============================================ */
 
 :root {
-  --cream: #FAF6F0;
-  --warm-white: #FFFDF9;
-  --parchment: #F2EBE0;
-  --clay: #C4704A;
-  --clay-light: #D4845C;
-  --clay-dark: #A05A38;
-  --bark: #5C3D2E;
-  --bark-light: #7A5544;
-  --sage: #7A8C6E;
-  --sage-light: #A0B090;
-  --charcoal: #2C2218;
-  --mid-gray: #8C7B6E;
-  --light-gray: #D8CFC4;
+  /* Main purple color rgba(106, 82, 148) = #6A5294 */
+  --cream: #F5F0FA;
+  --warm-white: #FDFBFF;
+  --parchment: #EDE6F5;
+  --clay: #6A5294;
+  --clay-light: #8570B0;
+  --clay-dark: #554276;
+  --bark: #3D3254;
+  --bark-light: #5C4D75;
+  --sage: #7A6B8C;
+  --sage-light: #9D8FB0;
+  --charcoal: #2D2438;
+  --mid-gray: #7A6E8C;
+  --light-gray: #E0D8E8;
   --danger: #A85C58;
   --danger-hover: #8B4A46;
-  --card-shadow: 0 4px 24px rgba(44, 34, 24, 0.10);
-  --card-shadow-hover: 0 8px 40px rgba(44, 34, 24, 0.18);
+  --card-shadow: 0 4px 24px rgba(106, 82, 148, 0.12);
+  --card-shadow-hover: 0 8px 40px rgba(106, 82, 148, 0.2);
   --font-display: 'Playfair Display', Georgia, serif;
   --font-body: 'DM Sans', sans-serif;
   --radius: 12px;
@@ -483,7 +484,7 @@ body {
 }
 
 .like-btn:hover, .like-btn.liked {
-  background: #FFF0EB;
+  background: #F0EBF8;
   border-color: var(--clay-light);
   color: var(--clay);
 }
@@ -625,7 +626,7 @@ body {
   background: var(--warm-white);
   border-radius: var(--radius);
   padding: 20px 24px;
-  box-shadow: 0 2px 8px rgba(44,34,24,0.06);
+  box-shadow: 0 2px 8px rgba(106, 82, 148, 0.08);
 }
 
 .review-header {
@@ -714,7 +715,7 @@ body {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(44, 34, 24, 0.55);
+  background: rgba(45, 36, 56, 0.55);
   z-index: 200;
   display: flex;
   align-items: center;
@@ -732,7 +733,7 @@ body {
   max-width: 420px;
   position: relative;
   animation: slideUp 0.3s ease;
-  box-shadow: 0 20px 60px rgba(44,34,24,0.25);
+  box-shadow: 0 20px 60px rgba(106, 82, 148, 0.22);
 }
 
 @keyframes slideUp {
@@ -945,7 +946,7 @@ body {
 .url-input:focus {
   outline: none;
   border-color: var(--clay-light);
-  box-shadow: 0 0 0 3px rgba(196, 112, 74, 0.12);
+  box-shadow: 0 0 0 3px rgba(106, 82, 148, 0.2);
 }
 
 .form-group textarea { resize: vertical; min-height: 80px; }
@@ -1082,7 +1083,7 @@ body {
   width: 100%;
 }
 
-.add-btn:hover { background: #FFF0EB; }
+.add-btn:hover { background: #F0EBF8; }
 
 .form-actions {
   display: flex;
