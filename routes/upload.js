@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
+// Accept an image upload, store it in Azure Blob Storage, and return its public URL.
 router.post('/', upload.single('image'), async (req, res) => {
   try {
     if (!req.file) {
@@ -19,12 +20,12 @@ router.post('/', upload.single('image'), async (req, res) => {
       process.env.AZURE_STORAGE_CONTAINER_NAME
     );
 
-    // generate unique file name
+    // Generate a unique blob name so uploads do not overwrite each other.
     const ext = req.file.originalname.split('.').pop();
     const blobName = `${uuidv4()}.${ext}`;
     const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 
-    // upload to Azure Blob
+    // Upload the in-memory file buffer with the correct content type metadata.
     await blockBlobClient.uploadData(req.file.buffer, {
       blobHTTPHeaders: { blobContentType: req.file.mimetype }
     });

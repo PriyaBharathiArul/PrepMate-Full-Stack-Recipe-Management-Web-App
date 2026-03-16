@@ -3,21 +3,21 @@ import models from '../models.js';
 
 const router = express.Router();
 
-// sign in
+// Start the Microsoft sign-in flow.
 router.get('/signin', (req, res, next) => {
   return req.authContext.login({
     postLoginRedirectUri: "/",
   })(req, res, next);
 });
 
-// sign out
+// Sign the user out and redirect back to the home page.
 router.get('/signout', (req, res, next) => {
   return req.authContext.logout({
     postLogoutRedirectUri: "/",
   })(req, res, next);
 });
 
-// Azure AD redirect callback
+// Store the authenticated Azure user in the app's local session.
 router.post('/redirect', async (req, res, next) => {
   const account = req.authContext?.getAccount();
   console.log('account:', account); 
@@ -43,7 +43,7 @@ router.post('/redirect', async (req, res, next) => {
   res.redirect('/');
 });
 
-// get current user
+// Return the current session user so the frontend can render auth-aware UI.
 router.get('/me', (req, res) => {
   if (!req.session.user) {
     return res.status(401).json({ message: 'Not logged in' });

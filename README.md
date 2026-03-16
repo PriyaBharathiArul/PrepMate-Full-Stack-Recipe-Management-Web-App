@@ -18,6 +18,10 @@ We are building this application because we have personally experienced the inef
 
 This project allows us to solve a real-world challenge while strengthening our backend development skills, particularly in designing RESTful systems, managing structured data, and implementing secure authentication. Ultimately, we are motivated to create a practical tool that we would genuinely use in our own daily lives.
 
+## Live Demo
+
+Render URL: https://final-project-starter-rayna-2024.onrender.com/
+
 ---
 
 ## Architectural Diagrams
@@ -55,43 +59,57 @@ This project allows us to solve a real-world challenge while strengthening our b
 
 ### Authentication
 
-```
-POST /auth/register
-POST /auth/login
-GET  /auth/me
-PUT  /users/me
-```
+- `GET /auth/signin`  
+  Starts the Azure AD sign-in flow for a user.
+- `GET /auth/signout`  
+  Signs the current user out and clears the authenticated session.
+- `POST /auth/redirect`  
+  Handles the Azure AD redirect callback and stores the logged-in user in the session.
+- `GET /auth/me`  
+  Returns the currently authenticated user's session information.
 
 ### Recipes
 
-```
-GET    /recipes
-GET    /recipes/:id
-POST   /recipes
-PUT    /recipes/:id
-DELETE /recipes/:id
-```
+- `GET /recipes`  
+  Returns all recipes, with optional filtering by category.
+- `GET /recipes/:id`  
+  Returns the full details for a single recipe.
+- `POST /recipes`  
+  Creates a new recipe for the logged-in user.
+- `PUT /recipes/:id`  
+  Updates an existing recipe if the logged-in user is the owner.
+- `DELETE /recipes/:id`  
+  Deletes a recipe and its related likes/reviews if the logged-in user is the owner.
 
-### Favorites
+### Reviews
 
-```
-POST /recipes/:id/favorite
-GET  /users/me/favorites
-```
+- `POST /recipes/:id/reviews`  
+  Adds a review and rating to a recipe.
+- `GET /recipes/:id/reviews`  
+  Returns all reviews for a specific recipe.
 
-### Comments
+### Likes
 
-```
-GET    /recipes/:id/comments
-POST   /recipes/:id/comments
-DELETE /comments/:id
-```
+- `POST /recipes/:id/like`  
+  Likes a recipe for the current user.
+- `DELETE /recipes/:id/like`  
+  Removes the current user's like from a recipe.
+- `GET /recipes/:id/liked`  
+  Checks whether the current user has already liked a recipe.
 
 ### User Content
 
-```
-GET /users/me/recipes
-```
+- `GET /users/me/recipes`  
+  Returns all recipes created by the logged-in user.
+- `GET /users/me/liked`  
+  Returns all recipes liked by the logged-in user.
+- `GET /users/me/reviews`  
+  Returns all reviews written by the logged-in user.
+
+### Uploads
+
+- `POST /api/upload`  
+  Uploads a recipe image to Azure Blob Storage and returns the image URL.
 
 ---
 

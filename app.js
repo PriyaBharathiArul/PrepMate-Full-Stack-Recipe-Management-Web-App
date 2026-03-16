@@ -47,6 +47,7 @@ const authProvider = await WebAppAuthProvider.initialize({
   }
 });
 app.use(authProvider.authenticate({ protectAllRoutes: false }));
+// Sync the Azure-authenticated account into the app session and local user collection.
 app.use(async (req, res, next) => {
   const account = req.authContext?.getAccount();
   if (account && !req.session.user) {
@@ -72,7 +73,7 @@ app.use(async (req, res, next) => {
   next();
 });
 app.use(express.static(path.join(__dirname, 'public')));
-// Make models accessible in req
+// Make database models available to downstream route handlers.
 app.use((req, res, next) => {
   req.models = models;
   next();

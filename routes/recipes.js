@@ -4,6 +4,7 @@ import models from '../models.js';
 
 const router = express.Router();
 
+// Normalize recipe documents so the frontend receives a consistent author/steps shape.
 function normalizeRecipe(recipeDoc) {
   const recipe = recipeDoc.toObject ? recipeDoc.toObject() : recipeDoc;
   const steps = Array.isArray(recipe.steps)
@@ -25,6 +26,7 @@ function normalizeRecipe(recipeDoc) {
   };
 }
 
+// Require an authenticated session before allowing protected recipe actions.
 function requireLogin(req, res, next) {
   if (!req.session?.user?._id) {
     return res.status(401).json({ message: 'Login required.' });
@@ -32,10 +34,12 @@ function requireLogin(req, res, next) {
   return next();
 }
 
+// Prevent invalid MongoDB ids from reaching database queries.
 function isValidObjectId(id) {
   return mongoose.Types.ObjectId.isValid(id);
 }
 
+// Clean up list inputs from the client before saving them to the database.
 function normalizeStringArray(value) {
   if (!Array.isArray(value)) return [];
   return value
@@ -43,6 +47,7 @@ function normalizeStringArray(value) {
     .filter(Boolean);
 }
 
+// Convert optional numeric inputs to safe non-negative numbers.
 function normalizeNumber(value) {
   const parsed = Number(value);
   return Number.isFinite(parsed) && parsed >= 0 ? parsed : 0;
@@ -96,7 +101,7 @@ router.post('/', requireLogin, async (req, res) => {
   }
 });
 
-// POST /api/recipes/:id/reviews - Add a review (rating + comment) to a recipe
+// Add a review and recompute the recipe's average rating.
 router.post('/:id/reviews', requireLogin, async (req, res) => {
   try {
     if (!isValidObjectId(req.params.id)) {
@@ -133,7 +138,7 @@ router.post('/:id/reviews', requireLogin, async (req, res) => {
   }
 });
 
-// GET /api/recipes/:id/reviews - Get all reviews for a recipe
+// Return all reviews for one recipe in the format expected by the frontend.
 router.get('/:id/reviews', async (req, res) => {
   try {
     if (!isValidObjectId(req.params.id)) {
@@ -144,7 +149,7 @@ router.get('/:id/reviews', async (req, res) => {
       .sort({ createdAt: -1 })
       .populate('userId', 'username email');
 
-    // Format response to match frontend expectations
+    // Shape the review payload so the client can render it directly.
     const formattedReviews = reviews.map(r => ({
       _id: r._id,
       rating: r.rating,
@@ -159,7 +164,7 @@ router.get('/:id/reviews', async (req, res) => {
   }
 });
 
-// POST /api/recipes/:id/like - Like a recipe
+// Save a like for the current user and update the recipe counter.
 router.post('/:id/like', requireLogin, async (req, res) => {
   try {
     if (!isValidObjectId(req.params.id)) {
@@ -171,7 +176,7 @@ router.post('/:id/like', requireLogin, async (req, res) => {
       return res.status(404).json({ message: 'Recipe not found.' });
     }
 
-    // Check if already liked
+    // Prevent duplicate likes from the same user.
     const existing = await models.Favorite.findOne({
       userId: req.session.user._id,
       recipeId: req.params.id
@@ -186,7 +191,7 @@ router.post('/:id/like', requireLogin, async (req, res) => {
       recipeId: req.params.id
     });
 
-    // Update like count
+    // Keep a denormalized like count on the recipe for quick reads.
     recipe.likeCount = (recipe.likeCount || 0) + 1;
     await recipe.save();
 
@@ -199,7 +204,7 @@ router.post('/:id/like', requireLogin, async (req, res) => {
   }
 });
 
-// DELETE /api/recipes/:id/like - Unlike a recipe
+// Remove a user's like and decrease the recipe counter.
 router.delete('/:id/like', requireLogin, async (req, res) => {
   try {
     if (!isValidObjectId(req.params.id)) {
@@ -215,7 +220,7 @@ router.delete('/:id/like', requireLogin, async (req, res) => {
       return res.status(404).json({ message: 'Like not found.' });
     }
 
-    // Update like count
+    // Keep the like count in sync after removing a favorite.
     const recipe = await models.Recipe.findById(req.params.id);
     if (recipe) {
       recipe.likeCount = Math.max((recipe.likeCount || 0) - 1, 0);
@@ -231,7 +236,7 @@ router.delete('/:id/like', requireLogin, async (req, res) => {
   }
 });
 
-// GET /api/recipes/:id/liked - Check if current user has liked a recipe
+// Let the frontend know whether the current user has liked this recipe.
 router.get('/:id/liked', requireLogin, async (req, res) => {
   try {
     if (!isValidObjectId(req.params.id)) {
@@ -249,7 +254,7 @@ router.get('/:id/liked', requireLogin, async (req, res) => {
   }
 });
 
-// GET /api/recipes/:id - Get a single recipe
+// Return one recipe with author details for the recipe detail page.
 router.get('/:id', async (req, res) => {
   try {
     if (!isValidObjectId(req.params.id)) {
@@ -267,7 +272,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// PUT /api/recipes/:id - Update a recipe
+// Update a recipe only if the current user owns it.
 router.put('/:id', requireLogin, async (req, res) => {
   try {
     if (!isValidObjectId(req.params.id)) {
@@ -327,7 +332,7 @@ router.put('/:id', requireLogin, async (req, res) => {
   }
 });
 
-// DELETE /api/recipes/:id - Delete a recipe
+// Delete a recipe and clean up related reviews and likes.
 router.delete('/:id', requireLogin, async (req, res) => {
   try {
     if (!isValidObjectId(req.params.id)) {
