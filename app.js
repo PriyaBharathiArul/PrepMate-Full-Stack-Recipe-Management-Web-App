@@ -43,7 +43,7 @@ const authProvider = await WebAppAuthProvider.initialize({
     authority: 'https://login.microsoftonline.com/' + azure_authority_id,
     clientId: azure_client_id,
     clientSecret: azure_secret,
-    redirectUri: '/auth/redirect',
+    redirectUri: 'https://final-project-starter-rayna-2024.onrender.com/redirect',
   }
 });
 app.use(authProvider.authenticate({ protectAllRoutes: false }));
