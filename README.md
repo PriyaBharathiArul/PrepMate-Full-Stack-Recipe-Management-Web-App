@@ -1,160 +1,79 @@
 # PrepMate
 
-**Final Project Proposal**  
-Course: INFO441 – Server Side Development  
-By: Priya, Hongyan, Rui
-
----
-
-## Overview
-
-Our target audience is busy home cooks and meal planners who want a more organized and efficient way to manage their cooking routines. These users enjoy preparing meals but struggle with deciding what to cook, tracking ingredients. They may be young professionals living independently, parents planning weekly family meals, or anyone seeking a more structured alternative to endlessly browsing recipe websites.
-
-Many existing recipe platforms prioritize content discovery over practical organization. While they offer large collections of recipes, they often include lengthy blog-style content, advertisements, and limited personalization tools. As a result, users frequently switch between multiple applications — one for recipes, another for ingredients, and another for meal planning.
-
-PrepMate addresses this gap by combining recipe management, meal organization, and automatic ingredients generation into a single streamlined platform. By reducing manual effort and simplifying planning, the application lowers the cognitive load involved in preparing meals.
-
-We are building this application because we have personally experienced the inefficiencies of managing recipes and meal preparation. From forgetting ingredients at the grocery store to spending excessive time navigating cluttered websites, we understand the problem firsthand.
-
-This project allows us to solve a real-world challenge while strengthening our backend development skills, particularly in designing RESTful systems, managing structured data, and implementing secure authentication. Ultimately, we are motivated to create a practical tool that we would genuinely use in our own daily lives.
+PrepMate is a full-stack recipe and meal planning web app that helps users organize recipes, manage their own cooking content, and keep everything in one place. The app supports Microsoft sign-in, recipe CRUD workflows, reviews, likes, user profile pages, and image uploads with Azure Blob Storage.
 
 ## Live Demo
 
-Render URL: https://final-project-starter-rayna-2024.onrender.com/
+https://final-project-starter-rayna-2024.onrender.com/
 
----
+## Key Features
 
-## Architectural Diagrams
+- Sign in with Microsoft authentication and maintain a session-backed user experience
+- Browse all recipes and filter them by category
+- Create, edit, and delete recipes you own
+- View recipe details with ingredients, instructions, author info, and images
+- Like recipes and track liked recipes from your profile
+- Leave ratings and written reviews on recipe pages
+- Upload recipe images to Azure Blob Storage
+- View your created recipes, liked recipes, and past reviews in one dashboard
+
+## Tech Stack
+
+- Frontend: HTML, CSS, Vanilla JavaScript
+- Backend: Node.js, Express
+- Database: MongoDB with Mongoose
+- Authentication: Microsoft identity via `msal-node-wrapper` and `express-session`
+- File Storage: Azure Blob Storage
+- Deployment: Render
+
+## Architecture
+
 ![Architecture Diagram](pictures/architecture_diagram.png)
-
----
 
 ## Data Flow
 
 ![Data Flow](pictures/data_flow.png)
 
----
-
-## Summary Table for User Stories
-
-| Priority | User | Description | Technical Implementation |
-|---------|------|-------------|------------------------|
-| P0 | As a user | I want to create an account and log in/out so my saved content is private. | Implement secure authentication with password hashing (bcrypt) and token-based session handling (JWT). |
-| P0 | As a user | I want to browse all recipes. | Retrieve recipe data from the database and return it through REST endpoints for display on the client. |
-| P0 | As a user | I want to filter recipes by category. | Store category fields in recipes and apply query-based filtering on the server before returning results. |
-| P0 | As a user | I want to create my own recipes. | Accept recipe data from authenticated users and store it linked to their user ID. |
-| P0 | As a user | I want to edit or delete recipes I created. | Verify recipe ownership before allowing updates or deletions in the database. |
-| P1 | As a user | I want to comment on recipes. | Store comments with references to both the recipe and the user, and retrieve them when viewing a recipe. |
-| P1 | As a user | I want to get recipe details from selected recipes. | Retrieve user’s recipe data from the database. |
-| P2 | As a user | I want to favorite recipes. | Store references to favorited recipes in the user profile and update favorite counts accordingly. |
-| P2 | As a user | I want to view my profile and all recipes I created. | Query the database for recipes linked to the user’s ID and display them on a profile page. |
-| P2 | As a user | I want to upload an image for my recipe. | Handle image uploads using Azure Blob Storage. |
-| P3 | As a user | I want to search recipes by keywords. | Use database text search or keyword matching to return relevant recipes. |
-| P3 | As a user | I want to see nutritional information. | Store optional nutrition fields and optionally integrate a third-party nutrition API. |
-| P3 | As a user | I want to share meal plans with friends. | Store shared meal plan data and optionally implement real-time updates using Socket.io. |
-
----
-
-## API Endpoints
+## API Overview
 
 ### Authentication
 
-- `GET /auth/signin`  
-  Starts the Azure AD sign-in flow for a user.
-- `GET /auth/signout`  
-  Signs the current user out and clears the authenticated session.
-- `POST /auth/redirect`  
-  Handles the Azure AD redirect callback and stores the logged-in user in the session.
-- `GET /auth/me`  
-  Returns the currently authenticated user's session information.
+- `GET /auth/signin` starts the Microsoft sign-in flow
+- `GET /auth/signout` signs the user out
+- `POST /auth/redirect` handles the auth callback
+- `GET /auth/me` returns the current session user
 
 ### Recipes
 
-- `GET /recipes`  
-  Returns all recipes, with optional filtering by category.
-- `GET /recipes/:id`  
-  Returns the full details for a single recipe.
-- `POST /recipes`  
-  Creates a new recipe for the logged-in user.
-- `PUT /recipes/:id`  
-  Updates an existing recipe if the logged-in user is the owner.
-- `DELETE /recipes/:id`  
-  Deletes a recipe and its related likes/reviews if the logged-in user is the owner.
+- `GET /recipes` returns all recipes with optional category filtering
+- `GET /recipes/:id` returns one recipe and author details
+- `POST /recipes` creates a recipe for the logged-in user
+- `PUT /recipes/:id` updates a recipe if the user is the owner
+- `DELETE /recipes/:id` deletes a recipe if the user is the owner
 
-### Reviews
+### Reviews and Likes
 
-- `POST /recipes/:id/reviews`  
-  Adds a review and rating to a recipe.
-- `GET /recipes/:id/reviews`  
-  Returns all reviews for a specific recipe.
-
-### Likes
-
-- `POST /recipes/:id/like`  
-  Likes a recipe for the current user.
-- `DELETE /recipes/:id/like`  
-  Removes the current user's like from a recipe.
-- `GET /recipes/:id/liked`  
-  Checks whether the current user has already liked a recipe.
+- `POST /recipes/:id/reviews` adds a review and rating
+- `GET /recipes/:id/reviews` returns reviews for a recipe
+- `POST /recipes/:id/like` likes a recipe
+- `DELETE /recipes/:id/like` removes a like
+- `GET /recipes/:id/liked` checks whether the current user liked a recipe
 
 ### User Content
 
-- `GET /users/me/recipes`  
-  Returns all recipes created by the logged-in user.
-- `GET /users/me/liked`  
-  Returns all recipes liked by the logged-in user.
-- `GET /users/me/reviews`  
-  Returns all reviews written by the logged-in user.
+- `GET /users/me/recipes` returns recipes created by the current user
+- `GET /users/me/liked` returns recipes liked by the current user
+- `GET /users/me/reviews` returns reviews written by the current user
 
 ### Uploads
 
-- `POST /api/upload`  
-  Uploads a recipe image to Azure Blob Storage and returns the image URL.
+- `POST /api/upload` uploads a recipe image and returns the hosted image URL
 
----
+## Data Model
 
-## Database Schema
+PrepMate uses MongoDB collections for users, recipes, comments, and favorites. Recipe ingredients are stored as structured JSON so the app can preserve recipe formatting while supporting future calculations and feature expansion.
 
-### Users
-
-```
-_id (ObjectId)
-username
-email
-password
-createdAt
-```
-
-### Recipes
-
-```
-_id (ObjectId)
-title (string)
-description (string)
-category (string)
-ingredients (JSON)
-instructions (list of strings)
-imageUrl (string)
-createdBy (ObjectId)
-favoritesCount (number)
-createdAt (date)
-```
-
-### Comments
-
-```
-_id (ObjectId)
-recipeId (ObjectId)
-userId (ObjectId)
-text (string)
-createdAt (date)
-```
-
----
-
-## Database Details
-
-We store our recipe ingredients as structured JSON in the database. Each recipe document looks like:
+Example recipe ingredient structure:
 
 ```json
 {
@@ -175,4 +94,34 @@ We store our recipe ingredients as structured JSON in the database. Each recipe 
 }
 ```
 
-This structure preserves recipe formatting while enabling computation and future features.
+## Local Setup
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Create a `.env` file with the required variables:
+
+```bash
+MONGODB_URI=
+AZURE_AUTH_SECRET=
+AZURE_CLIENT_ID=
+AZURE_AUTHORITY_ID=
+AZURE_STORAGE_CONNECTION_STRING=
+AZURE_STORAGE_CONTAINER_NAME=
+PORT=3000
+```
+
+3. Start the development server:
+
+```bash
+npm run dev
+```
+
+4. Open `http://localhost:3000`
+
+## Deployment Note
+
+The Microsoft authentication redirect URI is configured in [`app.js`](/Users/priyabharathiarul/Desktop/Course/info441/Project/final-project-starter-Rayna-2024/app.js). If you deploy this project to a new environment, update the redirect URI to match that deployment's callback URL.
