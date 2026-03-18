@@ -1,9 +1,5 @@
 # PrepMate
-
-**Final Project Proposal**  
 Course: INFO441 – Server Side Development  
-By: Priya, Hongyan, Rui
-
 ---
 
 ## Overview
