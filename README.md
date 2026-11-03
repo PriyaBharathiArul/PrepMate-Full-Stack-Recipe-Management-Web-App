@@ -6,6 +6,8 @@ PrepMate is a full-stack recipe and meal planning web app that helps users organ
 
 https://final-project-starter-rayna-2024.onrender.com/
 
+Recorded Demo: https://drive.google.com/file/d/1mRUrh0alQWlkgaHeWdB4c6KcUrsXre09/view
+
 ## Key Features
 
 - Sign in with Microsoft authentication and maintain a session-backed user experience
