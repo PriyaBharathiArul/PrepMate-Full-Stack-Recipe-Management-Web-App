@@ -16,9 +16,11 @@ import uploadRouter from './routes/upload.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const azure_secret = process.env.AZURE_AUTH_SECRET;
+const azure_secret = process.env.AZURE_CLIENT_SECRET || process.env.AZURE_AUTH_SECRET;
 const azure_client_id = process.env.AZURE_CLIENT_ID;
-const azure_authority_id = process.env.AZURE_AUTHORITY_ID;
+const azure_authority_id = process.env.AZURE_TENANT_ID || process.env.AZURE_AUTHORITY_ID;
+const session_secret = process.env.SESSION_SECRET || azure_secret;
+const app_base_url = process.env.APP_BASE_URL || 'https://final-project-starter-rayna-2024.onrender.com';
 
 var app = express();
 
@@ -30,7 +32,7 @@ app.use(cookieParser());
 // Session
 const oneDay = 1000 * 60 * 60 * 24;
 app.use(sessions({
-  secret: azure_secret,
+  secret: session_secret,
   saveUninitialized: true,
   cookie: { maxAge: oneDay },
   resave: false
@@ -43,7 +45,7 @@ const authProvider = await WebAppAuthProvider.initialize({
     authority: 'https://login.microsoftonline.com/' + azure_authority_id,
     clientId: azure_client_id,
     clientSecret: azure_secret,
-    redirectUri: 'https://final-project-starter-rayna-2024.onrender.com/redirect',
+    redirectUri: app_base_url + '/redirect',
   }
 });
 app.use(authProvider.authenticate({ protectAllRoutes: false }));

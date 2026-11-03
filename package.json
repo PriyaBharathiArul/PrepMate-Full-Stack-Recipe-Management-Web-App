@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "start": "node --env-file-if-exists .env ./bin/www.cjs",
-    "dev": "node --env-file-if-exists .env --watch ./bin/www.cjs"
+    "dev": "node --env-file-if-exists .env --watch ./bin/www.cjs",
+    "seed": "node --env-file-if-exists .env ./scripts/seed.js"
   },
   "dependencies": {
     "@azure/storage-blob": "^12.31.0",
