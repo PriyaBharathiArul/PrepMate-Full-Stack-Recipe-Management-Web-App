@@ -8,8 +8,6 @@ https://priya-prepmate.onrender.com/
 
 Browse recipes without an account, or sign in with any Microsoft account (work, school, or personal Outlook/Hotmail) to create, like, and review recipes. The site runs on Render's free tier, so the first load after a period of inactivity can take up to a minute.
 
-Recorded Demo: https://drive.google.com/file/d/1mRUrh0alQWlkgaHeWdB4c6KcUrsXre09/view
-
 ## Key Features
 
 - Sign in with Microsoft authentication and maintain a session-backed user experience
