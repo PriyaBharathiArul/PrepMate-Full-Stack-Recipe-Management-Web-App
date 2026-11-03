@@ -4,7 +4,9 @@ PrepMate is a full-stack recipe and meal planning web app that helps users organ
 
 ## Live Demo
 
-https://final-project-starter-rayna-2024.onrender.com/
+https://priya-prepmate.onrender.com/
+
+Browse recipes without an account, or sign in with any Microsoft account (work, school, or personal Outlook/Hotmail) to create, like, and review recipes. The site runs on Render's free tier, so the first load after a period of inactivity can take up to a minute.
 
 Recorded Demo: https://drive.google.com/file/d/1mRUrh0alQWlkgaHeWdB4c6KcUrsXre09/view
 
@@ -107,13 +109,14 @@ npm install
 2. Create a `.env` file with the required variables:
 
 ```bash
-MONGODB_URI=
-AZURE_AUTH_SECRET=
+MONGODB_URL=
 AZURE_CLIENT_ID=
-AZURE_AUTHORITY_ID=
+AZURE_TENANT_ID=common
+AZURE_CLIENT_SECRET=
+SESSION_SECRET=
+APP_BASE_URL=http://localhost:3000
 AZURE_STORAGE_CONNECTION_STRING=
 AZURE_STORAGE_CONTAINER_NAME=
-PORT=3000
 ```
 
 3. Start the development server:
@@ -124,6 +127,12 @@ npm run dev
 
 4. Open `http://localhost:3000`
 
+5. Optionally, load example recipes (sign in once first so a user exists):
+
+```bash
+npm run seed
+```
+
 ## Deployment Note
 
-The Microsoft authentication redirect URI is configured in [`app.js`](/Users/priyabharathiarul/Desktop/Course/info441/Project/final-project-starter-Rayna-2024/app.js). If you deploy this project to a new environment, update the redirect URI to match that deployment's callback URL.
+The app is deployed on Render with the same environment variables, with `APP_BASE_URL` set to the deployed URL. The Microsoft sign-in callback is `APP_BASE_URL + /redirect`, and that exact URL must be added as a Web redirect URI in the Azure app registration.
